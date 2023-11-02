@@ -3,7 +3,7 @@ import ChatHistory from '@/components/Chat/ChatHistory.vue';
 import { useChatStore } from '@/stores/chat-store';
 import { getFirestore, doc, onSnapshot } from 'firebase/firestore';
 import { useRoute } from 'vue-router';
-import Chat from '@/components/Chat/Chat.vue';
+import ChatContainer from '@/components/Chat/ChatContainer.vue';
 
 const chatStore = useChatStore();
 
@@ -32,7 +32,7 @@ if(id) {
 <template>
     <div class="chat-container">
         <ChatHistory />
-        <Chat/>
+        <ChatContainer/>
     </div>
 </template>
 
@@ -42,12 +42,6 @@ if(id) {
     min-height: 100vh;
     width: 100%;
     background-color: #f5f5f5;
-
-    :deep(.chat-history) {
-        height: 100vh;
-        width: 25%;
-        background-color: #2c3e50;
-    }
 
     :deep(.chat) {
         flex: 1;

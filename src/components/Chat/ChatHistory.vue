@@ -1,17 +1,17 @@
 <script lang="ts" setup>
-import { ChatRepository } from '@/repositories/chat-repository';
-import { useChatStore } from '@/stores/chat-store';
-import { onSnapshot } from 'firebase/firestore';
-import { ref, type Ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ChatRepository } from '@/repositories/chat-repository'
+import { useChatStore } from '@/stores/chat-store'
+import { onSnapshot } from 'firebase/firestore'
+import { ref, type Ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const chatRepository: ChatRepository = new ChatRepository();
+const chatRepository: ChatRepository = new ChatRepository()
 
-const chats: Ref<any[]> = ref([]);
+const chats: Ref<any[]> = ref([])
 
-const router = useRouter();
+const router = useRouter()
 
-const chatStore = useChatStore();
+const chatStore = useChatStore()
 
 chatRepository.getChats().then((chatsRef) => {
   onSnapshot(chatsRef, (snapshot) => {
@@ -22,24 +22,39 @@ chatRepository.getChats().then((chatsRef) => {
       }
     })
   })
-});
-
+})
 
 const selectChat = (chat: any) => {
-  chatStore.chat = chat;
+  chatStore.chat = chat
 
-  router.push('/chat/' + chat.id);
+  router.push('/chat/' + chat.id)
 }
 
 const newChat = () => {
-  chatStore.chat = null;
-  router.push('/chat/new');
+  chatStore.chat = null
+  router.push('/chat/new')
 }
 
+function overlayClick(e: MouseEvent) {
+  e.stopPropagation()
+
+  chatStore.isHistoryVisible = false
+}
 </script>
 
 <template>
-  <div class="chat-history has-text-light">
+  <div
+    class="chat-history-overlay"
+    :class="{ 'chat-history-overlay__visible': chatStore.isHistoryVisible }"
+    @click="overlayClick"
+  ></div>
+  <div
+    class="chat-history has-text-light"
+    :class="{
+      'chat-history__visible': chatStore.isHistoryVisible,
+      'chat-history__hidden': !chatStore.isHistoryVisible
+    }"
+  >
     <h1 class="subtitle has-text-light" @click="newChat">Chat History</h1>
     <div class="chat-history-item">New Chat</div>
     <div v-for="chat in chats" :key="chat.id" class="chat-history-item" @click="selectChat(chat)">
@@ -49,23 +64,67 @@ const newChat = () => {
 </template>
 
 <style lang="scss" scoped>
+.chat-history-overlay {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
 
+  &__visible {
+    position: fixed;
+    display: block;
+  }
+
+  @media (width >= 768px) {
+    display: none;
+  }
+}
 .chat-history {
+  position: fixed;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   overflow: hidden;
+  width: 55%;
+  transition: transform 0.2s ease-in-out;
+  height: 100vh;
+  max-height: 100vh;
+  background-color: #2c3e50;
+  overflow-y: auto;
+
+  &__visible {
+    transform: translateX(0);
+  }
+
+  &__hidden {
+    transform: translateX(-100%);
+  }
+
+  @media (width >= 768px) {
+    width: 20%;
+    height: 100%;
+    position: relative;
+
+    &__visible,
+    &__hidden {
+      transform: translateY(0);
+    }
+  }
 
   h1 {
     margin: 1rem;
   }
-  
 
   .chat-history-item {
     width: 100%;
-    margin: .5rem;
-    padding: .5rem;
+    margin: 0.5rem;
+    padding: 0.5rem;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
     user-select: none;

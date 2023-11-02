@@ -1,6 +1,7 @@
 import 'bulma/bulma.sass'
 
 import './assets/main.scss'
+import 'material-icons/iconfont/material-icons.css';
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

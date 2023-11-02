@@ -4,6 +4,7 @@ import { ref, type Ref } from 'vue'
 
 export const useChatStore = defineStore('chat', () => {
   const chat: Ref<any> = ref(undefined);
+  const isHistoryVisible: Ref<boolean> = ref(false);
   const chatRepository = new ChatRepository()
 
   const message = ref('')
@@ -31,6 +32,7 @@ export const useChatStore = defineStore('chat', () => {
   }
 
   return {
+    isHistoryVisible,
     chat,
     message,
     sendMessage,

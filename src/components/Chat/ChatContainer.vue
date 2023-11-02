@@ -8,6 +8,7 @@ import type { Unsubscribe } from 'firebase/auth'
 import { doc, getFirestore, onSnapshot } from 'firebase/firestore'
 import markdownIt from 'markdown-it';
 import Dialog from '@/components/UI/Dialog.vue'
+import ChatHeader from './ChatHeader.vue'
 
 let markdown = markdownIt();
 
@@ -61,6 +62,7 @@ watch(
       <button class="button is-primary" @click="chatStore.addInstruction()">Send</button>
     </Dialog>
     <div class="chat-header">
+      <ChatHeader />
       <button class="button" @click="instructionDialogVisible = true">Instructions</button>
     </div>
     <div class="messages" ref="messagesRef">
