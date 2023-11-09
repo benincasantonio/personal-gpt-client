@@ -5,7 +5,8 @@ import {
   query,
   where,
   type DocumentData,
-  Query
+  Query,
+  orderBy
 } from 'firebase/firestore'
 
 export class ChatRepository {
@@ -19,7 +20,13 @@ export class ChatRepository {
       throw new Error('User is not logged in')
     }
     const chatRefs = collection(this.firestore, 'chats')
-    const q = query(chatRefs, where('participants', 'array-contains', this.userStore.user!.uid))
+
+    const q = query(
+      chatRefs,
+      where('participants', 'array-contains', this.userStore.user!.uid),
+      orderBy('lastMessageAt', 'desc'),
+      orderBy('createdAt', 'desc')
+    )
 
     return q
   }
@@ -37,7 +44,6 @@ export class ChatRepository {
   }
 
   public addInstructionById(chatId: string, message: string) {
-    
     const idToken = this.userStore.token
     return fetch(`${this.baseUrl}chat/${chatId}/instruction`, {
       method: 'POST',
@@ -62,7 +68,7 @@ export class ChatRepository {
   }
 
   public sendMessage(chatId: string, message: string) {
-    const idToken = this.userStore.token;
+    const idToken = this.userStore.token
     console.log(chatId)
     return fetch(`${this.baseUrl}/chat/${chatId}/message`, {
       method: 'POST',
