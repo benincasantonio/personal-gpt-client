@@ -108,6 +108,7 @@ watch(
     justify-content: space-between;
     align-items: center;
     padding: .25rem 0;
+    column-gap: .5rem;
   }
 }
 </style>

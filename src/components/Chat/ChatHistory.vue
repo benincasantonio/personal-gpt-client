@@ -30,9 +30,9 @@ const selectChat = (chat: any) => {
   router.push('/chat/' + chat.id)
 }
 
-const newChat = () => {
+function newChat() {
+  router.push({ name: 'chat' })
   chatStore.chat = null
-  router.push('/chat/new')
 }
 
 function overlayClick(e: MouseEvent) {
@@ -55,8 +55,10 @@ function overlayClick(e: MouseEvent) {
       'chat-history__hidden': !chatStore.isHistoryVisible
     }"
   >
-    <h1 class="subtitle has-text-light" @click="newChat">Chat History</h1>
-    <div class="chat-history-item">New Chat</div>
+    <div class="chat-history-item chat-history-item--new-chat" @click="newChat">
+      <i class="material-icons">add</i>
+      <span>New Chat</span>
+    </div>
     <div v-for="chat in chats" :key="chat.id" class="chat-history-item" @click="selectChat(chat)">
       {{ chat.name ?? chat.messages[0].text }}
     </div>
@@ -68,7 +70,7 @@ function overlayClick(e: MouseEvent) {
   position: fixed;
   z-index: 1;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   top: 0;
   left: 0;
   display: none;
@@ -96,7 +98,7 @@ function overlayClick(e: MouseEvent) {
   height: 100vh;
   max-height: 100vh;
   background-color: #2c3e50;
-  overflow-y: auto;
+  overflow-y: scroll;
 
   &__visible {
     transform: translateX(0);
@@ -107,8 +109,8 @@ function overlayClick(e: MouseEvent) {
   }
 
   @media (width >= 768px) {
-    width: 20%;
-    height: 100%;
+    width: 30%;
+    height: 100vh;
     position: relative;
 
     &__visible,
@@ -123,13 +125,26 @@ function overlayClick(e: MouseEvent) {
 
   .chat-history-item {
     width: 100%;
-    margin: 0.5rem;
-    padding: 0.5rem;
+    max-width: 100%;
+    padding: 1rem;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
     user-select: none;
     border-radius: 0.5rem;
     white-space: pre-wrap;
+
+    &--new-chat {
+      border: 1px solid #f5f5f5;
+      padding: .5rem;
+      display: flex;
+      align-items: center;
+      margin: 1rem;
+      width: calc(100% - 2rem);
+
+      span {
+        margin-left: .25rem;
+      }
+    }
 
     &:hover {
       background-color: #34495e;

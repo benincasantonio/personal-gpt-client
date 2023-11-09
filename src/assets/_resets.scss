@@ -6,3 +6,9 @@ li {
 html {
   overflow: auto;
 }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

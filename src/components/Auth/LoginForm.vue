@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import router from '@/router';
 import { useUserStore } from '@/stores/user-store';
 import { useField } from 'vee-validate'
 import * as yup from 'yup'
@@ -21,12 +22,13 @@ const { value: password, errorMessage: passwordErrorMessage } = useField<string>
     .min(8, 'Your password must be at least 8 characters long.')
 )
 
-const onSubmit = (event: Event) => {
+const onSubmit = async (event: Event) => {
   event.preventDefault()
-  console.log('Form submitted!')
   const userStore = useUserStore()
 
-  userStore.login(email.value, password.value);
+  await userStore.login(email.value, password.value);
+
+  router.push({name: 'chat'});
 }
 </script>
 
